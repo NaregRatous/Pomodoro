@@ -19,8 +19,8 @@ door = True
 def play_count_down_music():
     # Play the music file
     pygame.mixer.init()
-    pygame.mixer.music.load('Light Rain with bg.mp3')
-    pygame.mixer.music.set_volume(0.25)  # Set the volume to 50%
+    pygame.mixer.music.load('Ocean Waves.mp3') # Light Rain with bg or Ocean Waves
+    pygame.mixer.music.set_volume(0.5)  # Set the volume to 50%
     pygame.mixer.music.play(-1)
 
 def play_timer_up_music():
@@ -44,7 +44,47 @@ def reset_timer():
     global reps
     reps = 0
 
+def settings():
+    settings_window = Toplevel(window)
+    settings_window.config(padx=100, pady=50, bg=YELLOW)
+    settings_window.title("Settings")
 
+    work_min_label = Label(settings_window, text="Work Min=",  fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
+    work_min_label.grid(column=0, row=0)
+    work_min_entry = Entry(settings_window, width=10)
+    work_min_entry.insert(0, WORK_MIN)  # This line displays the current work min
+    work_min_entry.grid(column=1, row=0)
+
+    short_break_label = Label(settings_window, text="Short Break Min=", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
+    short_break_label.grid(column=0, row=1)
+    short_break_entry = Entry(settings_window, width=10)
+    short_break_entry.insert(0, SHORT_BREAK_MIN)  # This line displays the current short break min
+    short_break_entry.grid(column=1, row=1)
+
+    long_break_label = Label(settings_window, text="Long Break Min=", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
+    long_break_label.grid(column=0, row=2)
+    long_break_entry = Entry(settings_window, width=10)
+    long_break_entry.insert(0, LONG_BREAK_MIN)  # This line displays the current long break min
+    long_break_entry.grid(column=1, row=2)
+
+    def save():
+        global WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN
+        try:
+            WORK_MIN = int(work_min_entry.get())
+            SHORT_BREAK_MIN = int(short_break_entry.get())
+            LONG_BREAK_MIN = int(long_break_entry.get())
+            settings_window.destroy()  # This line closes the window after saving the values
+        except ValueError:
+            print("Please enter a valid integer for all entries.")
+
+    def quit():
+        settings_window.destroy()
+
+    save_button = Button(settings_window, text="Save", command=save)
+    save_button.grid(column=0, row=3)
+
+    quit_button = Button(settings_window, text="Quit", command=quit)
+    quit_button.grid(column=1, row=3)
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def start_timer():
@@ -127,6 +167,9 @@ start_button.grid(column=0, row=2)
 
 reset_button = Button(text="Reset", highlightthickness=0, command=reset_timer)
 reset_button.grid(column=2, row=2)
+
+settings_button = Button(text="Settings", highlightthickness=0, command=settings)
+settings_button.grid(column=1, row=2)
 
 check_marks = Label(fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
