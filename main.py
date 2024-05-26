@@ -12,17 +12,22 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 30
 reps = 0
-timer = None
+timer = ""
 door = True
-SOUND_NAME = ""
+SOUND_NAME = "Ocean Waves.mp3"  # default value
+SOUND_VOLUME = 0.5
 # ---------------------------- PLAY MUSIC -------------------------------- #
+
+
 def play_count_down_music():
     # Play the music file
     pygame.mixer.init()
     print(SOUND_NAME)
-    pygame.mixer.music.load(SOUND_NAME) # Light Rain with bg or Ocean Waves
-    pygame.mixer.music.set_volume(0.5)  # Set the volume to 50%
+    print(SOUND_VOLUME)
+    pygame.mixer.music.load(SOUND_NAME)  # Light Rain with bg or Ocean Waves
+    pygame.mixer.music.set_volume(SOUND_VOLUME)  # Set the volume to 50%
     pygame.mixer.music.play(-1)
+
 
 def play_timer_up_music():
     # Play the music file
@@ -30,9 +35,11 @@ def play_timer_up_music():
     pygame.mixer.music.load('Timer up.mp3')
     pygame.mixer.music.play()
 
+
 def stop_music():
     pygame.mixer.music.stop()
 # ---------------------------- TIMER RESET ------------------------------- # 
+
 
 def reset_timer():
     global door
@@ -45,7 +52,10 @@ def reset_timer():
     global reps
     reps = 0
 
+
 def settings():
+    global SOUND_NAME, WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN, SOUND_VOLUME
+    local_sound_name = SOUND_NAME[:-4]
     settings_window = Toplevel(window)
     settings_window.config(padx=100, pady=50, bg=YELLOW)
     settings_window.title("Settings")
@@ -53,50 +63,61 @@ def settings():
     work_min_label = Label(settings_window, text="Work Min=",  fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
     work_min_label.grid(column=0, row=0)
     work_min_entry = Entry(settings_window, width=10)
-    work_min_entry.insert(0, WORK_MIN)  # This line displays the current work min
+    work_min_entry.insert(0, str(WORK_MIN))  # This line displays the current work min
     work_min_entry.grid(column=1, row=0)
 
     short_break_label = Label(settings_window, text="Short Break Min=", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
     short_break_label.grid(column=0, row=1)
     short_break_entry = Entry(settings_window, width=10)
-    short_break_entry.insert(0, SHORT_BREAK_MIN)  # This line displays the current short break min
+    short_break_entry.insert(0, str(SHORT_BREAK_MIN))  # This line displays the current short break min
     short_break_entry.grid(column=1, row=1)
 
     long_break_label = Label(settings_window, text="Long Break Min=", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
     long_break_label.grid(column=0, row=2)
     long_break_entry = Entry(settings_window, width=10)
-    long_break_entry.insert(0, LONG_BREAK_MIN)  # This line displays the current long break min
+    long_break_entry.insert(0, str(LONG_BREAK_MIN))  # This line displays the current long break min
     long_break_entry.grid(column=1, row=2)
 
-    ticking_sound_label = Label(settings_window, text="Ticking Sound", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))  # This line adds the "Ticking Sound" label
+    ticking_sound_label = Label(settings_window, text="Ticking Sound", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))  # This
+    # line adds the "Ticking Sound" label
     ticking_sound_label.grid(column=0, row=3)
 
     ticking_sound_var = StringVar(settings_window)
-    ticking_sound_var.set("Ocean Waves")  # default value
+    ticking_sound_var.set(local_sound_name)  # set the last selected item
     ticking_sound_menu = OptionMenu(settings_window, ticking_sound_var, "Ocean Waves", "Light Rain1")
     ticking_sound_menu.grid(column=1, row=3)
 
+    sound_volume_label = Label(settings_window, text="Sound Volume", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
+    sound_volume_label.grid(column=0, row=4)
+
+    volume_var = DoubleVar()
+    volume_var.set(SOUND_VOLUME)
+    volume_slider = Scale(settings_window, from_=0, to=1, orient=HORIZONTAL, variable=volume_var, resolution=0.01)
+    volume_slider.grid(column=1, row=4)
+
     def save():
-        global WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN, SOUND_NAME
+        global WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN, SOUND_NAME, SOUND_VOLUME
         try:
             WORK_MIN = int(work_min_entry.get())
             SHORT_BREAK_MIN = int(short_break_entry.get())
             LONG_BREAK_MIN = int(long_break_entry.get())
             SOUND_NAME = ticking_sound_var.get()
             SOUND_NAME = f"{SOUND_NAME}.mp3"
+            SOUND_VOLUME = volume_var.get()
             settings_window.destroy()  # This line closes the window after saving the values
         except ValueError:
             print("Please enter a valid integer for all entries.")
 
-    def quit():
+    def quit_settings():
         settings_window.destroy()
 
     save_button = Button(settings_window, text="Save", command=save)
-    save_button.grid(column=0, row=4)
+    save_button.grid(column=0, row=5)
 
-    quit_button = Button(settings_window, text="Quit", command=quit)
-    quit_button.grid(column=1, row=4)
+    quit_button = Button(settings_window, text="Quit", command=quit_settings)
+    quit_button.grid(column=1, row=5)
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
+
 
 def start_timer():
     global reps
@@ -104,10 +125,10 @@ def start_timer():
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
     long_break_sec = LONG_BREAK_MIN * 60
-    if reps ==1 or reps ==3 or reps == 5 or reps == 7:
+    if reps == 1 or reps == 3 or reps == 5 or reps == 7:
         title_label.config(text="Work", fg=GREEN)
         count_down(work_sec)
-    elif reps == 2 or reps ==4 or reps == 6:
+    elif reps == 2 or reps == 4 or reps == 6:
         title_label.config(text="Break", fg=PINK)
         count_down(short_break_sec)
     else:
@@ -115,7 +136,9 @@ def start_timer():
         count_down(long_break_sec)
         reps = 0
 
+
 music_thread = threading.Thread(target=play_count_down_music)
+
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
@@ -156,8 +179,6 @@ def count_down(count):
         window.attributes('-topmost', 0)  # This line makes other windows accessible after 1 second
 
 
-
-
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Pomodoro")
@@ -186,19 +207,4 @@ check_marks = Label(fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
 
 
-
-
-
-
 window.mainloop()
-
-
-
-
-
-
-
-
-
-
-
