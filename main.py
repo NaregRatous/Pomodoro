@@ -151,6 +151,8 @@ music_thread = threading.Thread(target=play_count_down_music)
 
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
+
+
 def count_down(count):
     global reps, global_count
     global_count = count
@@ -177,10 +179,16 @@ def count_down(count):
             play_timer_up_music()
             if reps == 0 or reps == 2 or reps == 4 or reps == 6:
                 title_label.config(text="Work", fg=GREEN)
+                count_min = WORK_MIN
+                canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
             elif reps == 1 or reps == 3 or reps == 5:
                 title_label.config(text="Break", fg=PINK)
+                count_min = SHORT_BREAK_MIN
+                canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
             else:
                 title_label.config(text="break", fg=RED)
+                count_min = LONG_BREAK_MIN
+                canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
 
             marks = ""
             work_sessions = math.floor(reps/2)
