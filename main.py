@@ -87,7 +87,8 @@ def settings():
 
     ticking_sound_var = StringVar(settings_window)
     ticking_sound_var.set(local_sound_name)  # set the last selected item
-    ticking_sound_menu = OptionMenu(settings_window, ticking_sound_var, "Ocean Waves", "Light Rain1")
+    ticking_sound_menu = OptionMenu(settings_window, ticking_sound_var, "Ocean Waves", "Light Rain1", "Light Rain2",
+                                    "Sea1", "Heavy Rain1")
     ticking_sound_menu.grid(column=1, row=3)
 
     sound_volume_label = Label(settings_window, text="Sound Volume", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))
