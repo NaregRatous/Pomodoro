@@ -120,10 +120,13 @@ def settings():
     quit_button = Button(settings_window, text="Quit", command=quit_settings)
     quit_button.grid(column=1, row=5)
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
+
+
 def pause_timer():
     global pause_flag
     pause_flag = True
     stop_music()
+
 
 def start_timer():
     global reps, global_count, pause_flag
@@ -146,6 +149,7 @@ def start_timer():
     else:
         count_down(global_count)
         play_count_down_music()
+
 
 music_thread = threading.Thread(target=play_count_down_music)
 
@@ -217,7 +221,7 @@ canvas.grid(column=1, row=1)
 start_button = Button(text="Start", highlightthickness=0, command=start_timer)
 start_button.grid(column=0, row=2)
 
-pause_button = Button(text="||", highlightthickness=0, command=pause_timer)
+pause_button = Button(text="Pause", highlightthickness=0, command=pause_timer)
 pause_button.grid(column=0, row=3)
 
 reset_button = Button(text="Reset", highlightthickness=0, command=reset_timer)
