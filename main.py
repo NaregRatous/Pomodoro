@@ -14,12 +14,13 @@ LONG_BREAK_MIN = 30
 reps = 0
 timer = None
 door = True
-
+SOUND_NAME = ""
 # ---------------------------- PLAY MUSIC -------------------------------- #
 def play_count_down_music():
     # Play the music file
     pygame.mixer.init()
-    pygame.mixer.music.load('Ocean Waves.mp3') # Light Rain with bg or Ocean Waves
+    print(SOUND_NAME)
+    pygame.mixer.music.load(SOUND_NAME) # Light Rain with bg or Ocean Waves
     pygame.mixer.music.set_volume(0.5)  # Set the volume to 50%
     pygame.mixer.music.play(-1)
 
@@ -67,12 +68,22 @@ def settings():
     long_break_entry.insert(0, LONG_BREAK_MIN)  # This line displays the current long break min
     long_break_entry.grid(column=1, row=2)
 
+    ticking_sound_label = Label(settings_window, text="Ticking Sound", fg=RED, bg=YELLOW, font=(FONT_NAME, 12))  # This line adds the "Ticking Sound" label
+    ticking_sound_label.grid(column=0, row=3)
+
+    ticking_sound_var = StringVar(settings_window)
+    ticking_sound_var.set("Ocean Waves")  # default value
+    ticking_sound_menu = OptionMenu(settings_window, ticking_sound_var, "Ocean Waves", "Light Rain1")
+    ticking_sound_menu.grid(column=1, row=3)
+
     def save():
-        global WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN
+        global WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN, SOUND_NAME
         try:
             WORK_MIN = int(work_min_entry.get())
             SHORT_BREAK_MIN = int(short_break_entry.get())
             LONG_BREAK_MIN = int(long_break_entry.get())
+            SOUND_NAME = ticking_sound_var.get()
+            SOUND_NAME = f"{SOUND_NAME}.mp3"
             settings_window.destroy()  # This line closes the window after saving the values
         except ValueError:
             print("Please enter a valid integer for all entries.")
@@ -81,10 +92,10 @@ def settings():
         settings_window.destroy()
 
     save_button = Button(settings_window, text="Save", command=save)
-    save_button.grid(column=0, row=3)
+    save_button.grid(column=0, row=4)
 
     quit_button = Button(settings_window, text="Quit", command=quit)
-    quit_button.grid(column=1, row=3)
+    quit_button.grid(column=1, row=4)
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def start_timer():
