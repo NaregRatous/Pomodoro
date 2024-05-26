@@ -19,7 +19,7 @@ SOUND_VOLUME = 0.5
 pause_flag = False
 global_count = 0
 # ---------------------------- PLAY MUSIC -------------------------------- #
-
+# for test from laptop to github
 
 def play_count_down_music():
     # Play the music file
